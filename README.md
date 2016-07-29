@@ -103,6 +103,11 @@ This returns a dictionary with bases as keys and their frequency as values. Note
 
 The start and end position are as with the `sequence()` method described above.
 
+If integer counts are preferred, then they can instead be returned.
+
+    >>> tb.frequency("chr1", 24, 74, True)
+    {'A': 6, 'C': 6, 'T': 6, 'G': 6}
+
 ## Close a file
 
 A `TwoBit` object can be closed with the `close()` method.

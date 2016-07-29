@@ -2,16 +2,17 @@
 #include <inttypes.h>
 #include "py2bit.h"
 
-static PyObject *py2bitOpen(PyObject *self, PyObject *pyArgs) {
+static PyObject *py2bitOpen(PyObject *self, PyObject *args, PyObject *kwds) {
     char *fname = NULL;
-    PyObject *pystoreMasked = Py_False;
+    PyObject *storeMaskedO = Py_False;
     pyTwoBit_t *pytb;
     int storeMasked = 0;
     TwoBit *tb = NULL;
+    static char *kwd_list[] = {"fname", "storeMasked", NULL};
 
-    if(!PyArg_ParseTuple(pyArgs, "s|O", &fname, &pystoreMasked)) goto error;
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "s|O", kwd_list, &fname, &storeMaskedO)) goto error;
 
-    if(pystoreMasked == Py_True) storeMasked = 1;
+    if(storeMaskedO == Py_True) storeMasked = 1;
 
     //Open the file
     tb = twobitOpen(fname, storeMasked);
@@ -151,14 +152,15 @@ PyObject *PyString_FromString(char *seq) {
 }
 #endif
 
-static PyObject *py2bitSequence(pyTwoBit_t *self, PyObject *args) {
+static PyObject *py2bitSequence(pyTwoBit_t *self, PyObject *args, PyObject *kwds) {
     PyObject *ret = NULL;
     TwoBit *tb = self->tb;
     char *seq, *chrom;
     unsigned long startl = 0, endl = 0;
     uint32_t start, end, len;
+    static char *kwd_list[] = {"chrom", "start", "end", NULL};
 
-    if(!PyArg_ParseTuple(args, "s|kk", &chrom, &startl, &endl)) {
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "s|kk", kwd_list, &chrom, &startl, &endl)) {
         PyErr_SetString(PyExc_RuntimeError, "You must supply at least a chromosome!");
         return NULL;
     }
@@ -191,15 +193,18 @@ static PyObject *py2bitSequence(pyTwoBit_t *self, PyObject *args) {
     return ret;
 }
 
-static PyObject *py2bitFrequency(pyTwoBit_t *self, PyObject *args) {
+static PyObject *py2bitFrequency(pyTwoBit_t *self, PyObject *args, PyObject *kwds) {
     PyObject *ret = NULL, *val = NULL;
+    PyObject *fractionO = Py_True;
     TwoBit *tb = self->tb;
     char *chrom;
-    double *o = NULL;
+    void *o = NULL;
     unsigned long startl = 0, endl = 0;
     uint32_t start, end, len;
+    static char *kwd_list[] = {"chrom", "start", "end", "fraction", NULL};
+    int fraction = 1;
 
-    if(!PyArg_ParseTuple(args, "s|kk", &chrom, &startl, &endl)) {
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "s|kkO", kwd_list, &chrom, &startl, &endl, &fractionO)) {
         PyErr_SetString(PyExc_RuntimeError, "You must supply at least a chromosome!");
         return NULL;
     }
@@ -217,7 +222,9 @@ static PyObject *py2bitFrequency(pyTwoBit_t *self, PyObject *args) {
     }
     start = (uint32_t) startl;
 
-    o = twobitFrequency(tb, chrom, start, end);
+    if(fractionO == Py_False) fraction = 0;
+
+    o = twobitFrequency(tb, chrom, start, end, fraction);
     if(!o) {
         PyErr_SetString(PyExc_RuntimeError, "Received an error while determining the per-base frequency.");
         return NULL;
@@ -227,28 +234,34 @@ static PyObject *py2bitFrequency(pyTwoBit_t *self, PyObject *args) {
     if(!ret) goto error;
 
     //A
-    val = PyFloat_FromDouble(o[0]);
+    if(fraction) val = PyFloat_FromDouble(((double*)o)[0]);
+    else val = PyLong_FromUnsignedLong(((uint32_t*)o)[0]);
     if(!val) goto error;
     if(PyDict_SetItemString(ret, "A", val) == -1) goto error;
     Py_DECREF(val);
 
     //C
-    val = PyFloat_FromDouble(o[1]);
+    if(fraction) val = PyFloat_FromDouble(((double*)o)[1]);
+    else val = PyLong_FromUnsignedLong(((uint32_t*)o)[1]);
     if(!val) goto error;
     if(PyDict_SetItemString(ret, "C", val) == -1) goto error;
     Py_DECREF(val);
 
     //T
-    val = PyFloat_FromDouble(o[2]);
+    if(fraction) val = PyFloat_FromDouble(((double*)o)[2]);
+    else val = PyLong_FromUnsignedLong(((uint32_t*)o)[2]);
     if(!val) goto error;
     if(PyDict_SetItemString(ret, "T", val) == -1) goto error;
     Py_DECREF(val);
 
     //G
-    val = PyFloat_FromDouble(o[3]);
+    if(fraction) val = PyFloat_FromDouble(((double*)o)[3]);
+    else val = PyLong_FromUnsignedLong(((uint32_t*)o)[3]);
     if(!val) goto error;
     if(PyDict_SetItemString(ret, "G", val) == -1) goto error;
     Py_DECREF(val);
+
+    free(o);
 
     return ret;
 

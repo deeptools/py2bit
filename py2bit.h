@@ -7,12 +7,12 @@ typedef struct {
     int storeMasked; //Whether storeMasked was set. 0 = False, 1 = True
 } pyTwoBit_t;
 
-static PyObject* py2bitOpen(PyObject *self, PyObject *args);
+static PyObject* py2bitOpen(PyObject *self, PyObject *args, PyObject *kwds);
 static PyObject *py2bitInfo(pyTwoBit_t *pybw, PyObject *args);
 static PyObject* py2bitClose(pyTwoBit_t *pybw, PyObject *args);
 static PyObject* py2bitChroms(pyTwoBit_t *pybw, PyObject *args);
-static PyObject *py2bitSequence(pyTwoBit_t *pybw, PyObject *args);
-static PyObject *py2bitFrequency(pyTwoBit_t *pybw, PyObject *args);
+static PyObject *py2bitSequence(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
+static PyObject *py2bitFrequency(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
 static void py2bitDealloc(pyTwoBit_t *pybw);
 
 static PyMethodDef tbMethods[] = {
@@ -117,15 +117,18 @@ Positional arguments:\n\
 Keyword arguments:\n\
     start: Starting position (0-based)\n\
     end:   Ending position (1-based)\n\
+    fraction: Whether to return fractional or integer values (default 'True',\n\
+              so fractional values are returned)\n\
 \n\
 Returns:\n\
-    A dictionary with nucleotide as the key and fraction as the value.\n\
+    A dictionary with nucleotide as the key and fraction (or count) as the\n\
+    value.\n\
 \n\
 If start and end aren't specified, the entire chromosome is returned. If the\n\
 end value is beyond the end of the chromosome then it is adjusted accordingly.\n\
 \n\
 Note that the fractions will sum to much less than 1 if there are hard-masked\n\
-bases.\n\
+bases. Counts may sum to less than the length of the region for the same reason.\n\
 \n\
 >>> import py2bit\n\
 >>> tb = py2bit.open(\"test/test.2bit\")\n\
@@ -133,6 +136,8 @@ bases.\n\
 {'A': 0.08, 'C': 0.08, 'T': 0.08666666666666667, 'G': 0.08666666666666667}\n\
 >>> tb.frequency(tb, \"chr1\", 24, 74)\n\
 {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12}\n\
+>>> tb.frequency(tb, \"chr1\", 24, 74, True)\n\
+{'A': 6, 'C': 6, 'T': 6, 'G': 6}\n\
 >>> tb.close()"},
     {NULL, NULL, 0, NULL}
 };

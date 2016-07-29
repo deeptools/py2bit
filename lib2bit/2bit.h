@@ -47,8 +47,8 @@ uint32_t twobitChromLen(TwoBit *tb, char *chrom);
 //Return the sequence of the given range (or a whole chromosome if start=end=0
 char *twobitSequence(TwoBit *tb, char *chrom, uint32_t start, uint32_t end);
 
-//We can try to assume that N is always a T and see if that's correct...
-double *twobitFrequency(TwoBit *tb, char *chrom, uint32_t start, uint32_t end);
+//Return a pointer to either 4 doubles or 4 uint32_ts holding per-base frequencies or counts.
+void *twobitFrequency(TwoBit *tb, char *chrom, uint32_t start, uint32_t end, int fractional);
 
 #ifdef __cplusplus
 }

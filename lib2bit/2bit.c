@@ -272,14 +272,20 @@ void increment(char base, uint32_t *A, uint32_t *C, uint32_t *T, uint32_t *G) {
     }
 }
 
-double *twobitFrequencyWorker(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end) {
-    double *out = malloc(4 * sizeof(double));
+void *twobitFrequencyWorker(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end, int fraction) {
+    void *out;
     uint32_t sz = end - start, pos = 0;
     uint32_t A = 0, C = 0, T = 0, G = 0, len = end - start;
     uint32_t maskIdx = -1, maskStart = -1, maskEnd = -1;
     uint32_t blockStart, offset;
     uint8_t byte, base;
     int rv = 0;
+
+    if(fraction) {
+        out = malloc(4 * sizeof(double));
+    } else {
+        out = malloc(4 * sizeof(uint32_t));
+    }
     if(!out) return NULL;
 
     getMask(tb, tid, start, end, &maskIdx, &maskStart, &maskEnd);
@@ -303,10 +309,17 @@ double *twobitFrequencyWorker(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t
         if(rv != 1) offset = 0;
     }
 
-    out[0] = ((double) A)/((double) len);
-    out[1] = ((double) C)/((double) len);
-    out[2] = ((double) T)/((double) len);
-    out[3] = ((double) G)/((double) len);
+    if(fraction) {
+        ((double*) out)[0] = ((double) A)/((double) len);
+        ((double*) out)[1] = ((double) C)/((double) len);
+        ((double*) out)[2] = ((double) T)/((double) len);
+        ((double*) out)[3] = ((double) G)/((double) len);
+    } else {
+        ((uint32_t*) out)[0] = A;
+        ((uint32_t*) out)[1] = C;
+        ((uint32_t*) out)[2] = T;
+        ((uint32_t*) out)[3] = G;
+    }
 
     return out;
 
@@ -315,7 +328,7 @@ error:
     return NULL;
 }
 
-double *twobitFrequency(TwoBit *tb, char *chrom, uint32_t start, uint32_t end) {
+void *twobitFrequency(TwoBit *tb, char *chrom, uint32_t start, uint32_t end, int fraction) {
     uint32_t tid = 0, i;
 
     //Get the chromosome ID
@@ -337,7 +350,7 @@ double *twobitFrequency(TwoBit *tb, char *chrom, uint32_t start, uint32_t end) {
     if(end > tb->idx->size[tid]) return NULL;
     if(start >= end) return NULL;
 
-    return twobitFrequencyWorker(tb, tid, start, end);
+    return twobitFrequencyWorker(tb, tid, start, end, fraction);
 }
 
 /*
