@@ -146,8 +146,8 @@ error :
 }
 
 #if PY_MAJOR_VERSION >= 3
-PyString_FromString(char *seq) {
-    return PyBytes_FromString(seq);
+PyObject *PyString_FromString(char *seq) {
+    return PyUnicode_FromString(seq);
 }
 #endif
 

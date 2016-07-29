@@ -144,7 +144,7 @@ struct py2bitmodule_state {
 
 #define GETSTATE(m) ((struct py2bitmodule_state*)PyModule_GetState(m))
 
-static PyModuleDef py2Bitmodule = {
+static PyModuleDef py2bitmodule = {
     PyModuleDef_HEAD_INIT,
     "py2bit",
     "A python module for accessing 2bit files",
