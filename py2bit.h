@@ -43,15 +43,15 @@ To store soft-masking information:\n\
   * The file size, in bytes ('file size').\n\
   * The number of chromosomes/contigs ('nChroms').\n\
   * The total sequence length ('sequence length').\n\
-  * The total hard-masked length ('hard-masked').\n\
-  * The total soft-masked length, if available ('soft-masked').\n\
+  * The total hard-masked length ('hard-masked length').\n\
+  * The total soft-masked length, if available ('soft-masked length').\n\
 \n\
 A base is hard-masked if it is an N and soft-masked if it's lower case. Note that soft-masking is ignored by default (you must specify 'storeMasked=True' when you open the file.\n\
 \n\
 >>> import py2bit\n\
 >>> tb = py2bit.open(\"some_file.2bit\")\n\
 >>> tb.info()\n\
-{'file size': 160L, 'nChroms': 2L, 'sequence length': 250L, 'hard-masked': 150L, 'soft-masked': 8L}\n\
+{'file size': 160L, 'nChroms': 2L, 'sequence length': 250L, 'hard-masked length': 150L, 'soft-masked length': 8L}\n\
 >>> tb.close()\n"},
     {"close", (PyCFunction)py2bitClose, METH_VARARGS,
 "Close a 2bit file.\n\
@@ -130,7 +130,7 @@ bases.\n\
 >>> import py2bit\n\
 >>> tb = py2bit.open(\"test/test.2bit\")\n\
 >>> tb.frequency(tb, \"chr1\")\n\
-{'A': 0.08, 'C': 0.08, 'T': 0.08, 'G': 0.08}\n\
+{'A': 0.08, 'C': 0.08, 'T': 0.08666666666666667, 'G': 0.08666666666666667}\n\
 >>> tb.frequency(tb, \"chr1\", 24, 74)\n\
 {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12}\n\
 >>> tb.close()"},
