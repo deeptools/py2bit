@@ -91,21 +91,21 @@ If it was requested during file opening that soft-masking information be stored,
 
 ## Fetch per-base statistics
 
-It's often required to compute the percentage of 1 or more bases in a chromosome. This can be done with the `frequency()` method.
+It's often required to compute the percentage of 1 or more bases in a chromosome. This can be done with the `bases()` method.
 
-    >>> tb.frequency("chr1")
+    >>> tb.bases("chr1")
     {'A': 0.08, 'C': 0.08, 'T': 0.08666666666666667, 'G': 0.08666666666666667}
 
-This returns a dictionary with bases as keys and their frequency as values. Note that this will not sum to 1 if there are any hard-masked bases (the chromosome is 2/3 `N` in this case). One can also request this information over a particular region.
+This returns a dictionary with bases as keys and the fraction of the sequence composed of them as values. Note that this will not sum to 1 if there are any hard-masked bases (the chromosome is 2/3 `N` in this case). One can also request this information over a particular region.
 
-    >>> tb.frequency("chr1", 24, 74)
+    >>> tb.bases("chr1", 24, 74)
     {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12}
 
 The start and end position are as with the `sequence()` method described above.
 
 If integer counts are preferred, then they can instead be returned.
 
-    >>> tb.frequency("chr1", 24, 74, True)
+    >>> tb.bases("chr1", 24, 74, True)
     {'A': 6, 'C': 6, 'T': 6, 'G': 6}
 
 ## Close a file

@@ -272,7 +272,7 @@ void increment(char base, uint32_t *A, uint32_t *C, uint32_t *T, uint32_t *G) {
     }
 }
 
-void *twobitFrequencyWorker(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end, int fraction) {
+void *twobitBasesWorker(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end, int fraction) {
     void *out;
     uint32_t sz = end - start, pos = 0;
     uint32_t A = 0, C = 0, T = 0, G = 0, len = end - start;
@@ -328,7 +328,7 @@ error:
     return NULL;
 }
 
-void *twobitFrequency(TwoBit *tb, char *chrom, uint32_t start, uint32_t end, int fraction) {
+void *twobitBases(TwoBit *tb, char *chrom, uint32_t start, uint32_t end, int fraction) {
     uint32_t tid = 0, i;
 
     //Get the chromosome ID
@@ -350,7 +350,7 @@ void *twobitFrequency(TwoBit *tb, char *chrom, uint32_t start, uint32_t end, int
     if(end > tb->idx->size[tid]) return NULL;
     if(start >= end) return NULL;
 
-    return twobitFrequencyWorker(tb, tid, start, end, fraction);
+    return twobitBasesWorker(tb, tid, start, end, fraction);
 }
 
 /*

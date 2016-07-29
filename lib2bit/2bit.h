@@ -48,7 +48,8 @@ uint32_t twobitChromLen(TwoBit *tb, char *chrom);
 char *twobitSequence(TwoBit *tb, char *chrom, uint32_t start, uint32_t end);
 
 //Return a pointer to either 4 doubles or 4 uint32_ts holding per-base frequencies or counts.
-void *twobitFrequency(TwoBit *tb, char *chrom, uint32_t start, uint32_t end, int fractional);
+//The order is A, C, T, G
+void *twobitBases(TwoBit *tb, char *chrom, uint32_t start, uint32_t end, int fractional);
 
 #ifdef __cplusplus
 }

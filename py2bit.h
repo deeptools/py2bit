@@ -12,7 +12,7 @@ static PyObject *py2bitInfo(pyTwoBit_t *pybw, PyObject *args);
 static PyObject* py2bitClose(pyTwoBit_t *pybw, PyObject *args);
 static PyObject* py2bitChroms(pyTwoBit_t *pybw, PyObject *args);
 static PyObject *py2bitSequence(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
-static PyObject *py2bitFrequency(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
+static PyObject *py2bitBases(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
 static void py2bitDealloc(pyTwoBit_t *pybw);
 
 static PyMethodDef tbMethods[] = {
@@ -107,14 +107,14 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACGTACGTACGTagctagctGATCGATCGT
 >>> tb.sequence(\"chr1\", 24, 74)\n\
 NNNNNNNNNNNNNNNNNNNNNNNNNNACGTACGTACGTagctagctGATC\n\
 >>> tb.close()"},
-    {"frequency", (PyCFunction)py2bitFrequency, METH_VARARGS|METH_KEYWORDS,
-"Retrieve the percentage of A, C, T, and Gs in a chromosome or subset thereof.\n\
-On error, a runtime exception is thrown.\n\
+    {"bases", (PyCFunction)py2bitBases, METH_VARARGS|METH_KEYWORDS,
+"Retrieve the percentage or number of A, C, T, and Gs in a chromosome or subset\n\
+thereof. On error, a runtime exception is thrown.\n\
 \n\
 Positional arguments:\n\
     chr:   Chromosome name\n\
 \n\
-Keyword arguments:\n\
+Optional keyword arguments:\n\
     start: Starting position (0-based)\n\
     end:   Ending position (1-based)\n\
     fraction: Whether to return fractional or integer values (default 'True',\n\
@@ -132,11 +132,11 @@ bases. Counts may sum to less than the length of the region for the same reason.
 \n\
 >>> import py2bit\n\
 >>> tb = py2bit.open(\"test/test.2bit\")\n\
->>> tb.frequency(tb, \"chr1\")\n\
+>>> tb.bases(tb, \"chr1\")\n\
 {'A': 0.08, 'C': 0.08, 'T': 0.08666666666666667, 'G': 0.08666666666666667}\n\
->>> tb.frequency(tb, \"chr1\", 24, 74)\n\
+>>> tb.bases(tb, \"chr1\", 24, 74)\n\
 {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12}\n\
->>> tb.frequency(tb, \"chr1\", 24, 74, True)\n\
+>>> tb.bases(tb, \"chr1\", 24, 74, True)\n\
 {'A': 6, 'C': 6, 'T': 6, 'G': 6}\n\
 >>> tb.close()"},
     {NULL, NULL, 0, NULL}

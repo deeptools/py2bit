@@ -35,9 +35,9 @@ class Test():
         assert(tb.sequence("chr1", 24, 74) == "NNNNNNNNNNNNNNNNNNNNNNNNNNACGTACGTACGTagctagctGATC")
         tb.close()
 
-    def testFrequency(self):
+    def testBases(self):
         tb = py2bit.open(self.fname, True)
-        assert(tb.frequency("chr1") == {'A': 0.08, 'C': 0.08, 'T': 0.08666666666666667, 'G': 0.08666666666666667})
-        assert(tb.frequency("chr1", 24, 74) == {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12})
-        assert(tb.frequency("chr1", 24, 74, False) == {'A': 6, 'C': 6, 'T': 6, 'G': 6})
+        assert(tb.bases("chr1") == {'A': 0.08, 'C': 0.08, 'T': 0.08666666666666667, 'G': 0.08666666666666667})
+        assert(tb.bases("chr1", 24, 74) == {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12})
+        assert(tb.bases("chr1", 24, 74, False) == {'A': 6, 'C': 6, 'T': 6, 'G': 6})
         tb.close()

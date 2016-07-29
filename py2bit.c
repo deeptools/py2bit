@@ -193,7 +193,7 @@ static PyObject *py2bitSequence(pyTwoBit_t *self, PyObject *args, PyObject *kwds
     return ret;
 }
 
-static PyObject *py2bitFrequency(pyTwoBit_t *self, PyObject *args, PyObject *kwds) {
+static PyObject *py2bitBases(pyTwoBit_t *self, PyObject *args, PyObject *kwds) {
     PyObject *ret = NULL, *val = NULL;
     PyObject *fractionO = Py_True;
     TwoBit *tb = self->tb;
@@ -224,9 +224,9 @@ static PyObject *py2bitFrequency(pyTwoBit_t *self, PyObject *args, PyObject *kwd
 
     if(fractionO == Py_False) fraction = 0;
 
-    o = twobitFrequency(tb, chrom, start, end, fraction);
+    o = twobitBases(tb, chrom, start, end, fraction);
     if(!o) {
-        PyErr_SetString(PyExc_RuntimeError, "Received an error while determining the per-base frequency.");
+        PyErr_SetString(PyExc_RuntimeError, "Received an error while determining the per-base metrics.");
         return NULL;
     }
 
