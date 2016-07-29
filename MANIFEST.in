@@ -1,0 +1,4 @@
+include LICENSE.txt README.md *.c *.h setup.py setup.cfg
+include lib2bit/*
+include py2bitTest/*
+exclude py2bit.egg-info/*
