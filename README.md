@@ -50,7 +50,7 @@ Note that if you would like to include information about soft-masked bases, you 
 
 You can directly access a particular chromosome by specifying its name.
 
-    >>> tb.chroms()
+    >>> tb.chroms('chr1')
     150L
 
 The lengths are stored as a "long" integer type, which is why there's an `L` suffix. If you specify a nonexistent chromosome then nothing is output.
@@ -105,7 +105,7 @@ The start and end position are as with the `sequence()` method described above.
 
 If integer counts are preferred, then they can instead be returned.
 
-    >>> tb.bases("chr1", 24, 74, True)
+    >>> tb.bases("chr1", 24, 74, False)
     {'A': 6, 'C': 6, 'T': 6, 'G': 6}
 
 ## Close a file
