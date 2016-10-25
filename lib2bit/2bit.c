@@ -275,7 +275,7 @@ uint8_t getByteMaskFromOffset(int offset) {
 
 void *twobitBasesWorker(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end, int fraction) {
     void *out;
-    uint32_t tmp[4] = {0, 0, 0, 0}, len = end - start, i = 0, j = 0;
+    uint32_t tmp[4] = {0, 0, 0, 0}, len = end - start + (start % 4), i = 0, j = 0;
     uint32_t blockStart, blockEnd, maskIdx = (uint32_t) -1, maskStart, maskEnd, foo;
     uint8_t *bytes = NULL, mask = 0, offset;
 
@@ -293,8 +293,10 @@ void *twobitBasesWorker(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end, 
     bytes = malloc(blockEnd - blockStart);
     if(!bytes) goto error;
 
-    //Set the initial mask
+    //Set the initial mask, reset start/offset so we always deal with full bytes
     mask = getByteMaskFromOffset(offset);
+    start = 4 * blockStart;
+    offset = 0;
 
     if(twobitSeek(tb, tb->idx->offset[tid] + blockStart) != 0) goto error;
     if(twobitRead(bytes, blockEnd - blockStart, 1, tb) != 1) goto error;
