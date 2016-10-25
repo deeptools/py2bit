@@ -9,33 +9,21 @@ srcs = [x for x in
     glob.glob("lib2bit/*.c")]
 srcs.append("py2bit.c")
 
-#libs=[]
-#if sysconfig.get_config_vars('BLDLIBRARY') is not None:
-#    #Note the "-l" prefix!
-#    for e in sysconfig.get_config_vars('BLDLIBRARY')[0].split():
-#        if e[0:2] == "-l":
-#            libs.append(e[2:])
-#elif(sys.version_info[0] >= 3 and sys.version_info[1] >= 3) :
-#    libs.append("python%i.%im" % (sys.version_info[0], sys.version_info[1]))
-#else :
-#    libs.append("python%i.%i" % (sys.version_info[0], sys.version_info[1]))
-
 additional_libs = [sysconfig.get_config_var("LIBDIR"), sysconfig.get_config_var("LIBPL")]
 
 module1 = Extension('py2bit',
                     sources = srcs,
-                    # libraries = libs,
                     library_dirs = additional_libs, 
                     include_dirs = ['lib2bit', sysconfig.get_config_var("INCLUDEPY")])
 
 setup(name = 'py2bit',
-       version = '0.1.0',
+       version = '0.2.0',
        description = 'A package for accessing 2bit files using lib2bit',
        author = "Devon P. Ryan",
        author_email = "ryan@ie-freiburg.mpg.de",
        url = "https://github.com/dpryan79/py2bit",
        license = "MIT",
-       download_url = "https://github.com/dpryan79/py2bit/tarball/0.1.0",
+       download_url = "https://github.com/dpryan79/py2bit/tarball/0.2.0",
        keywords = ["bioinformatics", "2bit"],
        classifier = ["Development Status :: 5 - Production/Stable",
                      "Intended Audience :: Developers",
