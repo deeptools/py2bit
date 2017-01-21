@@ -41,3 +41,8 @@ class Test():
         assert(tb.bases("chr1", 24, 74) == {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12})
         assert(tb.bases("chr1", 24, 74, False) == {'A': 6, 'C': 6, 'T': 6, 'G': 6})
         tb.close()
+
+    def testSequence(self):
+        tb = py2bit.open(self.fname, True)
+        assert(tb.sequence("chr1", 1, 3) == "NN")
+        assert(tb.sequence("chr1", 1, 2) == "N")
