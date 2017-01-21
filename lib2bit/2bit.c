@@ -72,6 +72,7 @@ void bytes2bases(char *seq, uint8_t *byte, uint32_t sz, int offset) {
         while(offset < 4) {
            seq[pos++] = byte2base(foo, offset++);
         }
+        if(pos >= sz) return;
         foo = byte[++i];
     }
 
@@ -158,9 +159,10 @@ void softMask(char *seq, TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end)
 */
 char *constructSequence(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end) {
     uint32_t sz = end - start + 1;
-    uint32_t blockStart, blockEnd, offset;
+    uint32_t blockStart, blockEnd;
     char *seq = malloc(sz * sizeof(char));
     uint8_t *bytes = NULL;
+    int offset;
     if(!seq) return NULL;
 
     //There are 4 bases/byte
