@@ -40,7 +40,7 @@ will result in soft-masked bases being lower case if the sequence is fetched\n\
 To store soft-masking information:\n\
 >>> tb = py2bit.open(\"some_file.2bit\", True)"},
     {NULL, NULL, 0, NULL}
-}
+};
 
 static PyMethodDef tbObjMethods[] = {
     {"info", (PyCFunction)py2bitInfo, METH_VARARGS,
