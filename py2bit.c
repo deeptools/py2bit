@@ -290,8 +290,10 @@ PyMODINIT_FUNC PyInit_py2bit(void) {
 #else
 //Python2 initialization
 PyMODINIT_FUNC initpy2bit(void) {
+    PyObject *res;
     if(PyType_Ready(&pyTwoBit) < 0) return;
-    Py_InitModule3("py2bit", tbMethods, "A module for handling 2bit files");
+    res = Py_InitModule3("py2bit", tbMethods, "A module for handling 2bit files");
+    Py_INCREF(&pyTwoBit);
     PyModule_AddObject(res, "py2bit", (PyObject *) &pyTwoBit);
     PyModule_AddStringConstant(res, "__version__", pyTwoBitVersion);
 }
