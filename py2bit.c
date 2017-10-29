@@ -283,6 +283,7 @@ PyMODINIT_FUNC PyInit_py2bit(void) {
 
     Py_INCREF(&pyTwoBit);
     PyModule_AddObject(res, "py2bit", (PyObject *) &pyTwoBit);
+    PyModule_AddStringConstant(res, "__version__", pyTwoBitVersion);
 
     return res;
 }
@@ -291,5 +292,7 @@ PyMODINIT_FUNC PyInit_py2bit(void) {
 PyMODINIT_FUNC initpy2bit(void) {
     if(PyType_Ready(&pyTwoBit) < 0) return;
     Py_InitModule3("py2bit", tbMethods, "A module for handling 2bit files");
+    PyModule_AddObject(res, "py2bit", (PyObject *) &pyTwoBit);
+    PyModule_AddStringConstant(res, "__version__", pyTwoBitVersion);
 }
 #endif

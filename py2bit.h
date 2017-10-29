@@ -1,6 +1,8 @@
 #include <Python.h>
 #include "2bit.h"
 
+#define pyTwoBitVersion 0.2.2
+
 typedef struct {
     PyObject_HEAD
     TwoBit *tb;
@@ -37,6 +39,10 @@ will result in soft-masked bases being lower case if the sequence is fetched\n\
 \n\
 To store soft-masking information:\n\
 >>> tb = py2bit.open(\"some_file.2bit\", True)"},
+    {NULL, NULL, 0, NULL}
+}
+
+static PyMethodDef tbObjMethods[] = {
     {"info", (PyCFunction)py2bitInfo, METH_VARARGS,
 "Returns a dictionary containing the following key:value pairs: \n\
 \n\
@@ -196,7 +202,7 @@ static PyTypeObject pyTwoBit = {
     0,                         /*tp_weaklistoffset*/
     0,                         /*tp_iter*/
     0,                         /*tp_iternext*/
-    tbMethods,                 /*tp_methods*/
+    tbObjMethods,                 /*tp_methods*/
     0,                         /*tp_members*/
     0,                         /*tp_getset*/
     0,                         /*tp_base*/
