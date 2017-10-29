@@ -10,6 +10,7 @@ typedef struct {
 } pyTwoBit_t;
 
 static PyObject* py2bitOpen(PyObject *self, PyObject *args, PyObject *kwds);
+static PyObject *py2bitEnter(pyTwoBit_t *pybw, PyObject *args);
 static PyObject *py2bitInfo(pyTwoBit_t *pybw, PyObject *args);
 static PyObject* py2bitClose(pyTwoBit_t *pybw, PyObject *args);
 static PyObject* py2bitChroms(pyTwoBit_t *pybw, PyObject *args);
@@ -145,6 +146,8 @@ bases. Counts may sum to less than the length of the region for the same reason.
 >>> tb.bases(tb, \"chr1\", 24, 74, True)\n\
 {'A': 6, 'C': 6, 'T': 6, 'G': 6}\n\
 >>> tb.close()"},
+    {"__enter__", (PyCFunction) py2bitEnter, METH_NOARGS, NULL},
+    {"__exit__", (PyCFunction) py2bitClose, METH_VARARGS, NULL},
     {NULL, NULL, 0, NULL}
 };
 

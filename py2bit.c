@@ -31,6 +31,19 @@ error:
     return NULL;
 }
 
+PyObject *py2bitEnter(pyTwoBit_t *self, PyObject *args) {
+    pyTwoBit_t *pytb = self->tb;
+
+    if(!pytb) {
+        PyErr_SetString(PyExc_RuntimeError, "The 2bit file handle is not opened!");
+        return NULL;
+    }
+
+    Py_INCREF(self);
+
+    return (PyObject*) self;
+}
+
 static void py2bitDealloc(pyTwoBit_t *self) {
     if(self->tb) twobitClose(self->tb);
     PyObject_DEL(self);
