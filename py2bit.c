@@ -35,7 +35,7 @@ PyObject *py2bitEnter(pyTwoBit_t *self, PyObject *args) {
     pyTwoBit_t *pytb = self->tb;
 
     if(!pytb) {
-        PyErr_SetString(PyExc_RuntimeError, "The 2bit file handle is not opened!");
+        PyErr_SetString(PyExc_RuntimeError, "The 2bit file handle is not open!");
         return NULL;
     }
 
@@ -61,6 +61,11 @@ static PyObject *py2bitInfo(pyTwoBit_t *self, PyObject *args) {
     TwoBit *tb = self->tb;
     PyObject *ret = NULL, *val = NULL;
     uint32_t i, j, foo;
+
+    if(!tb) {
+        PyErr_SetString(PyExc_RuntimeError, "The 2bit file handle is not open!");
+        return NULL;
+    }
 
     ret = PyDict_New();
 
@@ -126,6 +131,11 @@ static PyObject *py2bitChroms(pyTwoBit_t *self, PyObject *args) {
     char *chrom = NULL;
     uint32_t i;
 
+    if(!tb) {
+        PyErr_SetString(PyExc_RuntimeError, "The 2bit file handle is not open!");
+        return NULL;
+    }
+
     if(!(PyArg_ParseTuple(args, "|s", &chrom)) || !chrom) {
         ret = PyDict_New();
         if(!ret) goto error;
@@ -173,6 +183,11 @@ static PyObject *py2bitSequence(pyTwoBit_t *self, PyObject *args, PyObject *kwds
     uint32_t start, end, len;
     static char *kwd_list[] = {"chrom", "start", "end", NULL};
 
+    if(!tb) {
+        PyErr_SetString(PyExc_RuntimeError, "The 2bit file handle is not open!");
+        return NULL;
+    }
+
     if(!PyArg_ParseTupleAndKeywords(args, kwds, "s|kk", kwd_list, &chrom, &startl, &endl)) {
         PyErr_SetString(PyExc_RuntimeError, "You must supply at least a chromosome!");
         return NULL;
@@ -216,6 +231,11 @@ static PyObject *py2bitBases(pyTwoBit_t *self, PyObject *args, PyObject *kwds) {
     uint32_t start, end, len;
     static char *kwd_list[] = {"chrom", "start", "end", "fraction", NULL};
     int fraction = 1;
+
+    if(!tb) {
+        PyErr_SetString(PyExc_RuntimeError, "The 2bit file handle is not open!");
+        return NULL;
+    }
 
     if(!PyArg_ParseTupleAndKeywords(args, kwds, "s|kkO", kwd_list, &chrom, &startl, &endl, &fractionO)) {
         PyErr_SetString(PyExc_RuntimeError, "You must supply at least a chromosome!");
