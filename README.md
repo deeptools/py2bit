@@ -15,6 +15,7 @@ Table of Contents
    * [Print file information](#print-file-information)
    * [Fetch a sequence](#fetch-a-sequence)
    * [Fetch per-base statistics](#fetch-per-base-statistics)
+   * [Fetch masked blocks](#fetch-masked-blocks)
  * [A note on coordinates](#a-note-on-coordinates)
 
 # Installation
@@ -107,6 +108,31 @@ If integer counts are preferred, then they can instead be returned.
 
     >>> tb.bases("chr1", 24, 74, False)
     {'A': 6, 'C': 6, 'T': 6, 'G': 6}
+
+## Fetch masked blocks
+
+There are two kinds of masking blocks that can be present in 2bit files: hard-masked and soft-masked. Hard-masked blocks are stretches of NNNN, as are commonly found near telomeres and centromeres. Soft-masked blocks are runs of lowercase A/C/T/G, typically indicating repeat elements or low-complexity stretches. In can sometimes be useful to query this information from 2bit files:
+
+    >>> tb.hardMaskedBlocks("chr1")
+    [(0, 50), (100, 150)]
+
+In this (small) example, there are two stretches of hard-masked sequence, from 0 to 50 and again from 100 to 150 (see the note below about coordinates). If you would instead like to query all blocks overlapping with a specific region, you can specify the region bounds:
+
+    >>> tb.hardMaskedBlocks("chr1", 75, 101)
+    [(100, 150)]
+
+If there are no overlapping regions, then an empty list is returned:
+
+    >>> tb.hardMaskedBlocks("chr1", 75, 100)
+    []
+
+Instead of `hardMaskedBlocks()`, one can use `softMaskedBlocks()` in an identical manner:
+
+    >>> tb = py2bit.open("foo.2bit", storeMasked=True)
+    >>> tb.softMaskedBlocks("chr1")
+    [(62, 70)]
+
+As shown, you **must** specify `storeMasked=True` or you will receive a run time error.
 
 ## Close a file
 
