@@ -1,7 +1,7 @@
 #include <Python.h>
 #include "2bit.h"
 
-#define pyTwoBitVersion "0.2.2"
+#define pyTwoBitVersion "0.3.0"
 
 typedef struct {
     PyObject_HEAD
@@ -16,6 +16,8 @@ static PyObject* py2bitClose(pyTwoBit_t *pybw, PyObject *args);
 static PyObject* py2bitChroms(pyTwoBit_t *pybw, PyObject *args);
 static PyObject *py2bitSequence(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
 static PyObject *py2bitBases(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
+static PyObject *py2bitHardMaskedBlocks(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
+static PyObject *py2bitSoftMaskedBlocks(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
 static void py2bitDealloc(pyTwoBit_t *pybw);
 
 static PyMethodDef tbMethods[] = {
@@ -145,6 +147,48 @@ bases. Counts may sum to less than the length of the region for the same reason.
 {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12}\n\
 >>> tb.bases(tb, \"chr1\", 24, 74, True)\n\
 {'A': 6, 'C': 6, 'T': 6, 'G': 6}\n\
+>>> tb.close()"},
+    {"hardMaskedBlocks", (PyCFunction)py2bitHardMaskedBlocks, METH_VARARGS|METH_KEYWORDS,
+"Retrieve a list of hard-masked blocks on a single-chromosome (or range on it).\n\
+\n\
+Positional arguments:\n\
+    chr:   Chromosome name\n\
+\n\
+Optional keyword arguments:\n\
+    start: Starting position (0-based)\n\
+    end:   Ending position (1-based)\n\
+\n\
+Returns:\n\
+    A list of tuples, with items start and end.\n\
+\n\
+>>> import py2bit\n\
+>>> tb = py2bit.open(\"test/test.2bit\")\n\
+>>> print(tb.hardMaskedBlocks(\"chr1\")\n\
+[(0, 50), (100, 150)]\n\
+>>> print(tb.hardMaskedBlocks(\"chr1\", 75, 100)\n\
+[]\n\
+>>> print(tb.hardMaskedBlocks(\"chr1\", 75, 101)\n\
+[(100, 150)]\n\
+>>> tb.close()"},
+    {"softMaskedBlocks", (PyCFunction)py2bitSoftMaskedBlocks, METH_VARARGS|METH_KEYWORDS,
+"Retrieve a list of soft-masked blocks on a single-chromosome (or range on it).\n\
+\n\
+Positional arguments:\n\
+    chr:   Chromosome name\n\
+\n\
+Optional keyword arguments:\n\
+    start: Starting position (0-based)\n\
+    end:   Ending position (1-based)\n\
+\n\
+Returns:\n\
+    A list of tuples, with items start and end.\n\
+\n\
+>>> import py2bit\n\
+>>> tb = py2bit.open(\"test/test.2bit\", storeMasked=True)\n\
+>>> print(tb.softMaskedBlocks(\"chr1\")\n\
+[(62, 70)]\n\
+>>> print(tb.softMaskedBlocks(\"chr1\", 0, 50)\n\
+[]\n\
 >>> tb.close()"},
     {"__enter__", (PyCFunction) py2bitEnter, METH_NOARGS, NULL},
     {"__exit__", (PyCFunction) py2bitClose, METH_VARARGS, NULL},

@@ -46,3 +46,19 @@ class Test():
         tb = py2bit.open(self.fname, True)
         assert(tb.sequence("chr1", 1, 3) == "NN")
         assert(tb.sequence("chr1", 1, 2) == "N")
+        tb.close()
+
+    def testHardMaskedBlocks(self):
+        tb = py2bit.open(self.fname, True)
+        assert(tb.hardMaskedBlocks("chr1") == [(0, 50), (100, 150)])
+        assert(tb.hardMaskedBlocks("chr1", 25, 75) == [(0, 50)])
+        assert(tb.hardMaskedBlocks("chr1", 75, 100) == [])
+        assert(tb.hardMaskedBlocks("chr1", 75, 101) == [(100, 150)])
+        assert(tb.hardMaskedBlocks("chr2") == [(50, 100)])
+        tb.close()
+
+    def testSoftMaskedBlocks(self):
+        tb = py2bit.open(self.fname, storeMasked=True)
+        assert(tb.softMaskedBlocks("chr1") == [(62, 70)])
+        assert(tb.softMaskedBlocks("chr1", 0, 50) == [])
+        tb.close()
