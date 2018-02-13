@@ -16,6 +16,7 @@ Table of Contents
    * [Fetch a sequence](#fetch-a-sequence)
    * [Fetch per-base statistics](#fetch-per-base-statistics)
    * [Fetch masked blocks](#fetch-masked-blocks)
+   * [Close a file](#close-a-file)
  * [A note on coordinates](#a-note-on-coordinates)
 
 # Installation
