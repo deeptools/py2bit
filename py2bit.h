@@ -186,6 +186,9 @@ Returns:\n\
 >>> import py2bit\n\
 >>> tb = py2bit.open(\"test/test.2bit\", storeMasked=True)\n\
 >>> print(tb.softMaskedBlocks(\"chr1\")\n\
+[(62, 70)]\n\
+>>> print(tb.softMaskedBlocks(\"chr1\", 0, 50)\n\
+[]\n\
 >>> tb.close()"},
     {"__enter__", (PyCFunction) py2bitEnter, METH_NOARGS, NULL},
     {"__exit__", (PyCFunction) py2bitClose, METH_VARARGS, NULL},
