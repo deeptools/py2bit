@@ -17,6 +17,7 @@ static PyObject* py2bitChroms(pyTwoBit_t *pybw, PyObject *args);
 static PyObject *py2bitSequence(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
 static PyObject *py2bitBases(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
 static PyObject *py2bitHardMaskedBlocks(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
+static PyObject *py2bitSoftMaskedBlocks(pyTwoBit_t *pybw, PyObject *args, PyObject *kwds);
 static void py2bitDealloc(pyTwoBit_t *pybw);
 
 static PyMethodDef tbMethods[] = {
@@ -163,7 +164,28 @@ Returns:\n\
 >>> import py2bit\n\
 >>> tb = py2bit.open(\"test/test.2bit\")\n\
 >>> print(tb.hardMaskedBlocks(\"chr1\")\n\
->>> \n\
+[(0, 50), (100, 150)]\n\
+>>> print(tb.hardMaskedBlocks(\"chr1\", 75, 100)\n\
+[]\n\
+>>> print(tb.hardMaskedBlocks(\"chr1\", 75, 101)\n\
+[(100, 150)]\n\
+>>> tb.close()"},
+    {"softMaskedBlocks", (PyCFunction)py2bitSoftMaskedBlocks, METH_VARARGS|METH_KEYWORDS,
+"Retrieve a list of soft-masked blocks on a single-chromosome (or range on it).\n\
+\n\
+Positional arguments:\n\
+    chr:   Chromosome name\n\
+\n\
+Optional keyword arguments:\n\
+    start: Starting position (0-based)\n\
+    end:   Ending position (1-based)\n\
+\n\
+Returns:\n\
+    A list of tuples, with items start and end.\n\
+\n\
+>>> import py2bit\n\
+>>> tb = py2bit.open(\"test/test.2bit\", storeMasked=True)\n\
+>>> print(tb.softMaskedBlocks(\"chr1\")\n\
 >>> tb.close()"},
     {"__enter__", (PyCFunction) py2bitEnter, METH_NOARGS, NULL},
     {"__exit__", (PyCFunction) py2bitClose, METH_VARARGS, NULL},

@@ -56,3 +56,9 @@ class Test():
         assert(tb.hardMaskedBlocks("chr1", 75, 101) == [(100, 150)])
         assert(tb.hardMaskedBlocks("chr2") == [(50, 100)])
         tb.close()
+
+    def testSoftMaskedBlocks(self):
+        tb = py2bit.open(self.fname, storeMasked=True)
+        assert(tb.softMaskedBlocks("chr1") == [(62, 70)])
+        assert(tb.softMaskedBlocks("chr1", 0, 50) == [])
+        tb.close()
