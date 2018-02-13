@@ -306,6 +306,75 @@ error:
     return NULL;
 }
 
+static PyObject *py2bitHardMaskedBlocks(pyTwoBit_t *self, PyObject *args, PyObject *kwds) {
+    PyObject *ret = NULL, *tup = NULL;
+    TwoBit *tb = self->tb;
+    char *chrom;
+    unsigned long startl = 0, endl = 0, totalBlocks = 0, tid;
+    uint32_t start, end, len, blockStart, blockEnd, i, j;
+    static char *kwd_list[] = {"chrom", "start", "end", NULL};
+
+    if(!tb) {
+        PyErr_SetString(PyExc_RuntimeError, "The 2bit file handle is not open!");
+        return NULL;
+    }
+
+    if(!PyArg_ParseTupleAndKeywords(args, kwds, "s|kk", kwd_list, &chrom, &startl, &endl)) {
+        PyErr_SetString(PyExc_RuntimeError, "You must supply at least a chromosome!");
+        return NULL;
+    }
+
+    //Get the chromosome ID
+    for(i=0; i<tb->hdr->nChroms; i++) {
+        if(strcmp(tb->cl->chrom[i], chrom) == 0) {
+            tid = i;
+            break;
+        }
+    }
+
+    len = twobitChromLen(tb, chrom);
+    if(len == 0) {
+        PyErr_SetString(PyExc_RuntimeError, "The specified chromosome doesn't exist in the 2bit file!");
+        return NULL;
+    }
+    if(endl == 0) endl = len;
+    if(endl > len) endl = len;
+    end = (uint32_t) endl;
+    if(startl >= endl && startl > 0) {
+        PyErr_SetString(PyExc_RuntimeError, "The start value must be less then the end value (and the end of the chromosome");
+        return NULL;
+    }
+    start = (uint32_t) startl;
+
+    // Count the total number of overlapping N-masked blocks
+    for(i=0; i<tb->idx->nBlockCount[tid]; i++) {
+        blockStart = tb->idx->nBlockStart[tid][i];
+        blockEnd = blockStart + tb->idx->nBlockSizes[tid][i];
+        if(blockStart < end && blockEnd > start) totalBlocks++;
+    }
+
+    // Form the output
+    ret = PyList_New(totalBlocks);
+    if(!ret) goto error;
+    for(i=0, j=0; i<tb->idx->nBlockCount[tid]; i++) {
+        blockStart = tb->idx->nBlockStart[tid][i];
+        blockEnd = blockStart + tb->idx->nBlockSizes[tid][i];
+        if(blockStart < end && blockEnd > start) {
+            tup = Py_BuildValue("(kk)", (unsigned long) blockStart, (unsigned long) blockEnd);
+            if(!tup) goto error;
+            if(PyList_SetItem(ret, j++, tup)) goto error;
+        }
+    }
+
+    return ret;
+
+error:
+    if(ret) Py_XDECREF(ret);
+    if(tup) Py_XDECREF(tup);
+    PyErr_SetString(PyExc_RuntimeError, "Received an error while constructing the output list and tuples!");
+    return NULL;
+}
+
 #if PY_MAJOR_VERSION >= 3
 PyMODINIT_FUNC PyInit_py2bit(void) {
     PyObject *res;
