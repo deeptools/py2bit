@@ -31,6 +31,8 @@ class Test():
     def testSequence(self):
         tb = py2bit.open(self.fname, True)
         assert(tb.sequence("chr1") == "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACGTACGTACGTagctagctGATCGATCGTAGCTAGCTAGCTAGCTGATCNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN")
+        assert(tb.sequence("chr1", 1, 2) == "N")
+        assert(tb.sequence("chr1", 1, 3) == "NN")
         assert(tb.sequence("chr1", 0, 1000) == "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNACGTACGTACGTagctagctGATCGATCGTAGCTAGCTAGCTAGCTGATCNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN")
         assert(tb.sequence("chr1", 24, 74) == "NNNNNNNNNNNNNNNNNNNNNNNNNNACGTACGTACGTagctagctGATC")
         tb.close()
@@ -40,12 +42,6 @@ class Test():
         assert(tb.bases("chr1") == {'A': 0.08, 'C': 0.08, 'T': 0.08666666666666667, 'G': 0.08666666666666667})
         assert(tb.bases("chr1", 24, 74) == {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12})
         assert(tb.bases("chr1", 24, 74, False) == {'A': 6, 'C': 6, 'T': 6, 'G': 6})
-        tb.close()
-
-    def testSequence(self):
-        tb = py2bit.open(self.fname, True)
-        assert(tb.sequence("chr1", 1, 3) == "NN")
-        assert(tb.sequence("chr1", 1, 2) == "N")
         tb.close()
 
     def testHardMaskedBlocks(self):
