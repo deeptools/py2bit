@@ -278,6 +278,7 @@ uint8_t getByteMaskFromOffset(int offset) {
 void *twobitBasesWorker(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end, int fraction) {
     void *out;
     uint32_t tmp[4] = {0, 0, 0, 0}, len = end - start + (start % 4), i = 0, j = 0;
+    uint32_t seqLen = end - start;
     uint32_t blockStart, blockEnd, maskIdx = (uint32_t) -1, maskStart, maskEnd, foo;
     uint8_t *bytes = NULL, mask = 0, offset;
 
@@ -375,10 +376,10 @@ void *twobitBasesWorker(TwoBit *tb, uint32_t tid, uint32_t start, uint32_t end, 
     //out is in TCAG order, since that's how 2bit is stored.
     //However, for whatever reason I went with ACTG in the first release...
     if(fraction) {
-        ((double*) out)[0] = ((double) tmp[2])/((double) len);
-        ((double*) out)[1] = ((double) tmp[1])/((double) len);
-        ((double*) out)[2] = ((double) tmp[0])/((double) len);
-        ((double*) out)[3] = ((double) tmp[3])/((double) len);
+        ((double*) out)[0] = ((double) tmp[2])/((double) seqLen);
+        ((double*) out)[1] = ((double) tmp[1])/((double) seqLen);
+        ((double*) out)[2] = ((double) tmp[0])/((double) seqLen);
+        ((double*) out)[3] = ((double) tmp[3])/((double) seqLen);
     } else {
         ((uint32_t*) out)[0] = tmp[2];
         ((uint32_t*) out)[1] = tmp[1];
