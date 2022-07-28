@@ -1,0 +1,36 @@
+pr:
+  autoCancel: true
+
+jobs:
+
+- job: 'Linux'
+  pool:
+    vmImage: 'ubuntu-latest'
+  strategy:
+    matrix:
+      Python36:
+        python.version: '3.6'
+      Python37:
+        python.version: '3.7'
+      Python38:
+        python.version: '3.8'
+      Python39:
+        python.version: '3.9'
+      Python310:
+        python.version: '3.10'
+    maxParallel: 5
+
+  steps:
+  - bash: echo "##vso[task.prependpath]/usr/share/miniconda/bin"
+    displayName: Add conda to PATH
+
+  - bash: conda create -n foo -q --yes -c conda-forge -c bioconda python=$(python.version) libcurl zlib pip nose gcc_linux-64
+    displayName: Installing dependencies
+  - bash: |
+      source activate foo
+      python -m pip install . --no-deps --ignore-installed -vvv
+    displayName: Installing py2bit
+  - bash: |
+      source activate foo
+      nosetests -sv
+    displayName: Test py2bit
