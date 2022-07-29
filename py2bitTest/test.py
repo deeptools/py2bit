@@ -42,6 +42,8 @@ class Test():
         assert(tb.bases("chr1") == {'A': 0.08, 'C': 0.08, 'T': 0.08666666666666667, 'G': 0.08666666666666667})
         assert(tb.bases("chr1", 24, 74) == {'A': 0.12, 'C': 0.12, 'T': 0.12, 'G': 0.12})
         assert(tb.bases("chr1", 24, 74, False) == {'A': 6, 'C': 6, 'T': 6, 'G': 6})
+        assert(tb.bases("chr2", 10, 20) == {'A': 0.2, 'C': 0.2, 'T': 0.3, 'G': 0.3})
+        assert(tb.bases("chr2", 10, 20, False) == {'A': 2, 'C': 2, 'T': 3, 'G': 3})
         tb.close()
 
     def testHardMaskedBlocks(self):
