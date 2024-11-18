@@ -32,9 +32,9 @@ error:
 }
 
 PyObject *py2bitEnter(pyTwoBit_t *self, PyObject *args) {
-    pyTwoBit_t *pytb = self->tb;
+    TwoBit *tb = self->tb;
 
-    if(!pytb) {
+    if(!tb) {
         PyErr_SetString(PyExc_RuntimeError, "The 2bit file handle is not open!");
         return NULL;
     }

@@ -69,7 +69,7 @@ void bytes2bases(char *seq, uint8_t *byte, uint32_t sz, int offset) {
 
     // Deal with the first partial byte
     if(offset != 0) {
-        while(offset < 4) {
+        while(offset < 4 && pos < sz) {
            seq[pos++] = byte2base(foo, offset++);
         }
         if(pos >= sz) return;

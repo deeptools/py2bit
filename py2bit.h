@@ -1,7 +1,7 @@
 #include <Python.h>
 #include "2bit.h"
 
-#define pyTwoBitVersion "0.3.1"
+#define pyTwoBitVersion "0.3.2"
 
 typedef struct {
     PyObject_HEAD
