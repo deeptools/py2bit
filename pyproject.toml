@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=42", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py2bit"
+version = "0.3.3"
+description = "A package for accessing 2bit files using lib2bit"
+authors = [
+    { name = "Devon P. Ryan", email = "dpryan79@gmail.com" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+keywords = ["bioinformatics", "2bit"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved",
+    "Programming Language :: C",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Operating System :: MacOS"
+]
+
+[project.urls]
+download = "https://github.com/deeptools/py2bit"
+homepage = "https://github.com/deeptools/py2bit"
+
+# Enable version inference from scm
+[tool.setuptools_scm]
+
+# Target only minimum CPython version 3.9 on linux for wheel build
+[tool.cibuildwheel]
+skip = "pp* cp38-* *-manylinux_i686 *_ppc64le *_s390x *-musllinux_x86_64 *-musllinux_i686"
+
+[tool.cibuildwheel.linux]
+manylinux-x86_64-image = "manylinux2014"
