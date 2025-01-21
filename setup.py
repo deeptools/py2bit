@@ -17,7 +17,7 @@ module1 = Extension('py2bit',
                     include_dirs = ['lib2bit', sysconfig.get_config_var("INCLUDEPY")])
 
 setup(name = 'py2bit',
-       version = '0.3.2',
+       version = '0.3.3',
        description = 'A package for accessing 2bit files using lib2bit',
        author = "Devon P. Ryan",
        author_email = "dpryan79@gmail.com",
