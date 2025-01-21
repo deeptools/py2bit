@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "setuptools-scm"]
+requires = ["setuptools>=74.1", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -34,7 +34,7 @@ homepage = "https://github.com/deeptools/py2bit"
 # Override setuptools autodiscovery algorithm
 # Only include package test data/source for wheel distribution
 include-package-data = true
-packages = ["py2bit", "py2bitTest"]
+packages = ["py2bitTest"]
 
 # Enable version inference from scm
 [tool.setuptools_scm]
