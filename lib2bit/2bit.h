@@ -1,7 +1,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 
-/*! \mainpage libBigWig
+/*! \mainpage lib2bit
  *
  * \section Introduction
  *
@@ -45,7 +45,7 @@ typedef struct {
  */
 typedef struct {
     char **chrom; /**<A list of null terminated chromosomes */
-    uint32_t *offset; /**<The file offset for the beginning of each chromosome */
+    uint64_t *offset; /**<The file offset for the beginning of each chromosome */
 } TwoBitCL;
 
 /*!
