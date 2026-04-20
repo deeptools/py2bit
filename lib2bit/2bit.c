@@ -452,6 +452,7 @@ void twobitIndexRead(TwoBit *tb, int storeMasked) {
     if(!idx->nBlockStart) goto error;
     if(!idx->nBlockSizes) goto error;
     idx->maskBlockCount = calloc(tb->hdr->nChroms, sizeof(uint32_t));
+
     if(!idx->maskBlockCount) goto error;
     if(storeMasked) {
         idx->maskBlockStart = calloc(tb->hdr->nChroms, sizeof(uint32_t*));
@@ -584,11 +585,13 @@ void twobitChromListRead(TwoBit *tb) {
     uint8_t byte;
     char *str = NULL;
     TwoBitCL *cl = calloc(1, sizeof(TwoBitCL));
+    uint8_t useLong = tb->hdr->version == 1;
+    size_t offsetSz = (useLong) ? sizeof(uint64_t) : sizeof(uint32_t);
 
     //Allocate cl and do error checking
     if(!cl) goto error;
     cl->chrom = calloc(tb->hdr->nChroms, sizeof(char*));
-    cl->offset = malloc(sizeof(uint32_t) * tb->hdr->nChroms);
+    cl->offset = calloc(tb->hdr->nChroms, offsetSz);
     if(!cl->chrom) goto error;
     if(!cl->offset) goto error;
 
@@ -604,7 +607,7 @@ void twobitChromListRead(TwoBit *tb) {
         str = NULL;
 
         //Read in the size
-        if(twobitRead(cl->offset + i, sizeof(uint32_t), 1, tb) != 1) goto error;
+        if(twobitRead(cl->offset + i, offsetSz, 1, tb) != 1) goto error;
     }
 
     tb->cl = cl;
@@ -657,8 +660,8 @@ void twobitHdrRead(TwoBit *tb) {
 
     //Version
     hdr->version = data[1];
-    if(hdr->version != 0) {
-        fprintf(stderr, "[twobitHdrRead] The file version is %"PRIu32" while only version 0 is defined!\n", hdr->version);
+    if(hdr->version != 0 && hdr->version != 1) {
+        fprintf(stderr, "[twobitHdrRead] The file version is %"PRIu32" while only versions 0 and 1 are defined!\n", hdr->version);
         goto error;
     }
 
