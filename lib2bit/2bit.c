@@ -212,7 +212,7 @@ char *twobitSequence(TwoBit *tb, char *chrom, uint32_t start, uint32_t end) {
             break;
         }
     }
-    if(tid == 0 && strcmp(tb->cl->chrom[i], chrom) != 0) return NULL;
+    if(tid == 0 && strcmp(tb->cl->chrom[tid], chrom) != 0) return NULL;
 
     //Get the start/end if not specified
     if(start == end && end == 0) {
@@ -406,7 +406,7 @@ void *twobitBases(TwoBit *tb, char *chrom, uint32_t start, uint32_t end, int fra
         }
     }
 
-    if(tid == 0 && strcmp(tb->cl->chrom[i], chrom) != 0) return NULL;
+    if(tid == 0 && strcmp(tb->cl->chrom[tid], chrom) != 0) return NULL;
 
     //Get the start/end if not specified
     if(start == end && end == 0) {
@@ -517,7 +517,7 @@ error:
             for(i=0; i<tb->hdr->nChroms; i++) {
                 if(idx->nBlockSizes[i]) free(idx->nBlockSizes[i]);
             }
-            free(idx->nBlockSizes[i]);
+            free(idx->nBlockSizes);
         }
 
         if(idx->maskBlockCount) free(idx->maskBlockCount);
@@ -587,13 +587,15 @@ void twobitChromListRead(TwoBit *tb) {
     TwoBitCL *cl = calloc(1, sizeof(TwoBitCL));
     uint8_t useLong = tb->hdr->version == 1;
     size_t offsetSz = (useLong) ? sizeof(uint64_t) : sizeof(uint32_t);
+    void *offset = calloc(1, offsetSz);
 
     //Allocate cl and do error checking
     if(!cl) goto error;
     cl->chrom = calloc(tb->hdr->nChroms, sizeof(char*));
-    cl->offset = calloc(tb->hdr->nChroms, offsetSz);
+    cl->offset = calloc(tb->hdr->nChroms, sizeof(uint64_t));
     if(!cl->chrom) goto error;
     if(!cl->offset) goto error;
+    if(!offset) goto error;
 
     for(i=0; i<tb->hdr->nChroms; i++) {
         //Get the string size (not null terminated!)
@@ -607,8 +609,14 @@ void twobitChromListRead(TwoBit *tb) {
         str = NULL;
 
         //Read in the size
-        if(twobitRead(cl->offset + i, offsetSz, 1, tb) != 1) goto error;
+        if(twobitRead(offset, offsetSz, 1, tb) != 1) goto error;
+        if(useLong) {
+            cl->offset[i] = *((uint64_t*) offset);
+        } else {
+            cl->offset[i] = *((uint32_t*) offset);
+        }
     }
+    free(offset);
 
     tb->cl = cl;
     return;
@@ -625,6 +633,7 @@ error:
         }
         free(cl);
     }
+    if(offset) free(offset);
 }
 
 void twobitChromListDestroy(TwoBit *tb) {
