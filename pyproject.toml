@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "py2bit"
-version = "1.0.0"
+version = "1.0.1"
 description = "A package for accessing 2bit files using lib2bit"
 authors = [
     { name = "Devon P. Ryan", email = "dpryan79@gmail.com" }
