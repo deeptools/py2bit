@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -17,7 +18,9 @@ uint64_t twobitTell(TwoBit *tb);
     value is either 0 or less than nmemb
 */
 size_t twobitRead(void *data, size_t sz, size_t nmemb, TwoBit *tb) {
+    if(nmemb > SIZE_MAX / sz) return 0;
     if(tb->data) {
+        if(tb->offset + nmemb * sz >= tb->sz) return 0;  // Out of bounds read
         if(memcpy(data, tb->data + tb->offset, nmemb * sz) == NULL) return 0;
         tb->offset += nmemb * sz;
         return nmemb;
@@ -511,7 +514,7 @@ error:
             for(i=0; i<tb->hdr->nChroms; i++) {
                 if(idx->nBlockStart[i]) free(idx->nBlockStart[i]);
             }
-            free(idx->nBlockStart[i]);
+            free(idx->nBlockStart);
         }
         if(idx->nBlockSizes) {
             for(i=0; i<tb->hdr->nChroms; i++) {
@@ -525,13 +528,13 @@ error:
             for(i=0; i<tb->hdr->nChroms; i++) {
                 if(idx->maskBlockStart[i]) free(idx->maskBlockStart[i]);
             }
-            free(idx->maskBlockStart[i]);
+            free(idx->maskBlockStart);
         }
         if(idx->maskBlockSizes) {
             for(i=0; i<tb->hdr->nChroms; i++) {
                 if(idx->maskBlockSizes[i]) free(idx->maskBlockSizes[i]);
             }
-            free(idx->maskBlockSizes[i]);
+            free(idx->maskBlockSizes);
         }
 
         if(idx->offset) free(idx->offset);
